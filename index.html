@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Hums Resonance</title>
+  <style>
+    body { margin: 0; height: 100vh; background: #000; color: #fff; font-family: system-ui, sans-serif; overflow: hidden; display: flex; flex-direction: column; }
+    .header { position: fixed; top: 0; left: 0; padding: 20px; font-size: 18px; color: #33ffcc; opacity: 0.2; z-index: 10; }
+    .sine { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.005; z-index: 1; }
+    .bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; background: rgba(0,0,0,0.9); border-top: 1px solid #33ffcc; z-index: 5; }
+    .bar input { width: 100%; background: none; border: none; color: #fff; font-size: 16px; outline: none; placeholder-color: #ccc; }
+    .output { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%; text-align: center; opacity: 0; transition: opacity 0.5s; z-index: 3; }
+    .ko-fi { position: fixed; bottom: 20px; right: 20px; background: none; border: 1px solid #33ffcc; color: #33ffcc; padding: 10px; font-size: 12px; cursor: pointer; opacity: 0.5; z-index: 10; transition: opacity 0.3s; }
+    .ko-fi:hover { opacity: 1; }
+    .ellipsis { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #33ffcc; opacity: 0; transition: opacity 0.5s; z-index: 4; }
+    .bubble { margin: 10px 0; padding: 10px; border-radius: 20px; max-width: 80%; opacity: 0; transition: opacity 0.3s; }
+    .user { background: rgba(51, 255, 204, 0.1); margin-left: 20px; text-align: left; }
+    .response { background: rgba(255, 255, 255, 0.1); margin-right: 20px; text-align: right; }
+    @media (max-width: 600px) { .header { font-size: 16px; padding: 10px; } .bar { padding: 10px; } }
+  </style>
+</head>
+<body>
+  <div class="header">The Hums Resonance</div>
+  <svg class="sine" viewBox="0 0 100 100">
+    <path d="M0 50 Q25 30 50 50 T100 50" stroke="#33ffcc" stroke-width="0.1" fill="none" />
+  </svg>
+  <div class="output" id="output"></div>
+  <div class="ellipsis" id="ellipsis">resonating...</div>
+  <div class="bar">
+    <input id="input" placeholder="whisper your echoes: name / birth date (YYYY-MM-DD) / time (HH:MM) / place (city, country) / blood (A/B/AB/O) / garlic? (yes/no)" autofocus />
+  </div>
+  <button class="ko-fi" onclick="window.open('https://ko-fi.com/yourko-fi-link', '_blank')">£2</button>
+  <script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const ellipsis = document.getElementById('ellipsis');
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const text = input.value.trim();
+        if (text) {
+          // Add user bubble
+          const userBubble = document.createElement('div');
+          userBubble.className = 'bubble user';
+          userBubble.textContent = text;
+          document.body.appendChild(userBubble);
+          userBubble.style.opacity = '1';
+          input.value = '';
+
+          // Blink
+          document.body.style.background = '#000';
+          setTimeout(() => {
+            document.body.style.background = '#000';
+          }, 100);
+
+          // Ellipsis
+          ellipsis.style.opacity = '1';
+          setTimeout(() => ellipsis.style.opacity = '0', 500);
+
+          // Generate fused sentence (simple hash for seed, template pull)
+          const seed = text.split('/').reduce((a, b) => a + b.charCodeAt(0), 0) % 10;
+          const templates = [
+            "Your leak hits at 3:33 PM—walk the earth, feel the blueprint in mud; why? Ether thins for flood, hold the word.",
+            "9 orbit tightens—exhale the pause; why? Dark energy gap calls 528 repair, leak or echo lingers.",
+            "11 Hz antenna wakes—stand still; why? Cosmic rays delay signals 144 grid, breath turns it to sight."
+          ];
+          const sentence = templates[seed % templates.length];
+          setTimeout(() => {
+            output.textContent = sentence;
+            output.style.opacity = '1';
+            const responseBubble = document.createElement('div');
+            responseBubble.className = 'bubble response';
+            responseBubble.innerHTML = sentence;
+            document.body.appendChild(responseBubble);
+            responseBubble.style.opacity = '1';
+          }, 1000);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
